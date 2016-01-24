@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+        PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace='com.sean.mavendemo.main.mapper.IdGeneratorMapper'>
+
+    <insert id="insert"
+            parameterType="Sequence">
+        INSERT INTO id_generator (
+        high,
+        `interval`,
+        entity_name
+        ) VALUES (
+        #{high},
+        #{interval},
+        #{entityName}
+        )
+    </insert>
+
+    <update id="updateHighNumber"
+            parameterType="String">
+        UPDATE id_generator
+        SET high = high + 1
+        WHERE entity_name=#{entityName}
+    </update>
+
+    <select
+            id="getSequenceByEntityName"
+            parameterType="String"
+            resultType="Sequence">
+
+        SELECT
+        high,
+        `interval`,
+        entity_name
+        FROM id_generator
+        WHERE entity_name=#{entityName}
+    </select>
+
+
+</mapper>

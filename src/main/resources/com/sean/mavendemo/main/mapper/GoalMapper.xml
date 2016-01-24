@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+        PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace='com.sean.mavendemo.main.mapper.GoalMapper'>
+
+    <sql id="getAllColumnsFromGoal">
+        ${alias}.id, ${alias}.minutes
+    </sql>
+    
+    <resultMap id="goalResultMap" type="Goal">
+        <id property="id" column="id" />
+        <result property="minutes" column="minutes" />
+    </resultMap>
+
+    <select id="getGoals" resultMap="goalResultMap">
+        SELECT
+            <include refid="getAllColumnsFromGoal">
+                <property name="alias" value="g"/>
+            </include>
+        FROM
+            goals as g
+    </select>
+
+    <select id="getCountForGoal" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM goals
+    </select>
+
+    <select id="getGoalById" resultType="Goal">
+        SELECT
+            <include refid="getAllColumnsFromGoal">
+                <property name="alias" value="g" />
+            </include>
+        FROM
+            goals as g
+        WHERE id = #{id}
+    </select>
+
+    <select id="getMinutesById" resultType="java.lang.Integer">
+        SELECT minutes FROM id where id =
+    </select>
+
+    <insert id="insert"
+            parameterType="Goal"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO goals (minutes) VALUES (#{minutes, javaType=Integer, jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update"
+            parameterType="Goal">
+
+        UPDATE goals
+            <set>
+                <if test="minutes != null">minutes=#{minutes}</if>
+            </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+
+
+</mapper>

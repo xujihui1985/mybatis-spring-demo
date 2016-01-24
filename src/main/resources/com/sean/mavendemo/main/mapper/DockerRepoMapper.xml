@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper
+        PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+
+<mapper namespace='com.sean.mavendemo.main.mapper.DockerRepoMapper'>
+
+    <insert id="insert"
+            parameterType="DockerRepo">
+
+        INSERT INTO repository (
+            id,
+            repo_name,
+            description,
+            created_date,
+            modified_date,
+            version
+        ) VALUES (
+            #{id},
+            #{repoName},
+            #{description},
+            #{createdDate},
+            #{modifiedDate},
+            #{version}
+        );
+    </insert>
+
+    <select
+            id="queryRepoById"
+            parameterType="java.lang.Long"
+            resultMap="detailedDockerRepo">
+
+        SELECT
+            a.id as repoId,
+            repo_name,
+            description,
+            created_date,
+            modified_date,
+            a.version as repoVersion,
+            b.id as tagId,
+            repository_id,
+            docker_tag_name,
+            git_branch_name,
+            git_tag_name,
+            b.version as tagVersion
+        FROM repository as a
+            JOIN repository_tags as b ON a.id = b.repository_id
+        WHERE a.id = #{id}
+    </select>
+    
+    <resultMap id="detailedDockerRepo" type="com.sean.mavendemo.main.domain.dockerrepo.DockerRepo">
+        <id property="id" column="repoId"/>
+        <result property="repoName" column="repo_name" />
+        <result property="description" column="repo_name" />
+        <result property="createdDate" column="created_date" />
+        <result property="modifiedDate" column="modified_date" />
+        <result property="version" column="repoVersion" />
+        <collection property="repoTags" ofType="com.sean.mavendemo.main.domain.dockerrepo.RepoTag">
+            <id property="id" column="tagId"/>
+            <result property="tagName" column="docker_tag_name"/>
+            <result property="gitTagName" column="git_tag_name" />
+            <result property="gitBranchName" column="git_branch_name" />
+            <result property="version" column="tagVersion" />
+            <result property="dockerRepoId" column="repository_id"/>
+        </collection>
+    </resultMap>
+
+</mapper>
